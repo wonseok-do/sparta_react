@@ -9,6 +9,8 @@ import NotFound from "./NotFound";
 import { useDispatch } from "react-redux";
 import { createBucket } from "./redux/modules/bucket";
 import Progress from "./Progress";
+import { db } from "./firebase";
+import { collection, getDoc, getDocs, addDoc } from "firebase/firestore";
 function App() {
   const [list, setList] = React.useState([
     "영화관 가기",
@@ -17,6 +19,18 @@ function App() {
   ]);
   const text = React.useRef(null);
   const dispatch = useDispatch();
+
+  React.useEffect(() => {
+    async function fetchData() {
+      console.log(db);
+      const query = await getDocs(collection(db, "bucket"));
+      console.log(query);
+      query.forEach((doc) => {
+        console.log(doc.id, doc.data());
+      });
+    }
+    fetchData();
+  }, []);
 
   const addBucketList = () => {
     // 스프레드 문법! 기억하고 계신가요? :)
