@@ -62,6 +62,26 @@ const Input = styled.div`
   margin: 20px auto;
   border-radius: 5px;
   border: 1px solid #ddd;
+  display: flex;
+  & > * {
+    // &: 자신을 의미, *:자신안에 있는 모든속성 적용
+    padding: 5px;
+  }
+  & input {
+    border: 1px solid red;
+    margin-right: 10px;
+    width: 70%;
+  }
+  & input:focus {
+    outline: none; // focus색상 적용하기위해 none적용
+    border: 1px solid #a673ff;
+  }
+  & button {
+    width: 25%;
+    color: #fff;
+    border: #a673ff;
+    background: #a673ff;
+  }
 `;
 
 const Container = styled.div`
