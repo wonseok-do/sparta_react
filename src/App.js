@@ -7,10 +7,22 @@ import { Route, Routes } from "react-router-dom";
 import Detail from "./Detail";
 import NotFound from "./NotFound";
 import { useDispatch } from "react-redux";
-import { createBucket } from "./redux/modules/bucket";
+import {
+  createBucket,
+  loadBucketFB,
+  addBucketListFB,
+} from "./redux/modules/bucket";
 import Progress from "./Progress";
 import { db } from "./firebase";
-import { collection, getDoc, getDocs, addDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+} from "firebase/firestore";
 function App() {
   const [list, setList] = React.useState([
     "영화관 가기",
@@ -21,22 +33,15 @@ function App() {
   const dispatch = useDispatch();
 
   React.useEffect(() => {
-    async function fetchData() {
-      console.log(db);
-      const query = await getDocs(collection(db, "bucket"));
-      console.log(query);
-      query.forEach((doc) => {
-        console.log(doc.id, doc.data());
-      });
-    }
-    fetchData();
+    dispatch(loadBucketFB());
   }, []);
 
   const addBucketList = () => {
     // 스프레드 문법! 기억하고 계신가요? :)
     // 원본 배열 list에 새로운 요소를 추가해주었습니다.
     // setList([...list, text.current.value]);
-    dispatch(createBucket({ text: text.current.value, completed: false }));
+    // dispatch(createBucket({ text: text.current.value, completed: false }));
+    dispatch(addBucketListFB({ text: text.current.value, completed: false }));
   };
   return (
     <div className="App">
