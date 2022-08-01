@@ -6,7 +6,7 @@ import styled from "styled-components";
 import { Route, Routes } from "react-router-dom";
 import Detail from "./Detail";
 import NotFound from "./NotFound";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import {
   createBucket,
   loadBucketFB,
@@ -23,6 +23,7 @@ import {
   updateDoc,
   deleteDoc,
 } from "firebase/firestore";
+import Spinner from "./Spinner";
 function App() {
   const [list, setList] = React.useState([
     "영화관 가기",
@@ -31,6 +32,7 @@ function App() {
   ]);
   const text = React.useRef(null);
   const dispatch = useDispatch();
+  const is_loaded = useSelector((state) => state.bucket.is_loaded);
 
   React.useEffect(() => {
     dispatch(loadBucketFB());
@@ -69,6 +71,7 @@ function App() {
       >
         위로 가기
       </button>
+      {!is_loaded && <Spinner />}
     </div>
   );
 }
