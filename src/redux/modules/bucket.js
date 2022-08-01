@@ -15,6 +15,7 @@ const LOAD = "bucket/LOAD";
 const CREATE = "bucket/CREATE";
 const UPDATE = "bucket/UPDATE";
 const DELETE = "bucket/DELETE";
+const LOADED = "bucket/LOADED";
 
 const initialState = {
   is_loaded: false,
@@ -39,6 +40,10 @@ export function updateBucket(bucket_index) {
 export function deleteBucket(bucket_index) {
   return { type: DELETE, bucket_index };
 }
+export function isLoaded(loaded) {
+  return { type: LOADED, loaded };
+}
+
 // middlewares
 export const loadBucketFB = () => {
   return async function (dispatch) {
@@ -57,6 +62,7 @@ export const loadBucketFB = () => {
 
 export const addBucketListFB = (bucket) => {
   return async function (dispatch) {
+    dispatch(isLoaded(false));
     const docRef = await addDoc(collection(db, "bucket"), bucket);
     // const _bucket = await getDoc(docRef); // 1번째 방법
     // const bucket_data = { id: _bucket.id, ..._bucket.data() };
@@ -101,7 +107,7 @@ export default function reducer(state = initialState, action = {}) {
     }
     case "bucket/CREATE": {
       const new_bucket_list = [...state.list, action.bucket];
-      return { ...state, list: new_bucket_list };
+      return { ...state, list: new_bucket_list, is_loaded: true };
     }
 
     case "bucket/UPDATE": {
@@ -121,6 +127,9 @@ export default function reducer(state = initialState, action = {}) {
         return parseInt(action.bucket_index) !== idx;
       });
       return { ...state, list: new_bucket_list };
+    }
+    case "bucket/LOADED": {
+      return { ...state, is_loaded: action.loaded };
     }
     default:
       return state;
